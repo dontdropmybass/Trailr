@@ -1,7 +1,7 @@
 package ca.alexcochrane.trailr.model;
 
+import android.content.ContentValues;
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import ca.alexcochrane.trailr.controller.MovieDatabaseHelper;
@@ -76,15 +76,30 @@ public class Film {
         this.trailer = trailer;
     }
 
-    public void save(Context context) throws SQLException {
+    public boolean save(Context context) {
         SQLiteDatabase db = new MovieDatabaseHelper(context).getWritableDatabase();
-        String query = "UPDATE `films` SET "
-                + "rating = " + rating + ", "
-                + "title = '" + title + "', "
-                + "desc = '" + description + "', "
-                + "thumbnail = '" + thumbnail + "', "
-                + "trailer = '" + trailer + "' "
-                + "WHERE id = " + id + ";";
-        db.execSQL(query);
+
+        ContentValues values = new ContentValues();
+        values.put("rating", rating);
+        values.put("title", title);
+        values.put("desc", description);
+        values.put("thumbnail", thumbnail);
+        values.put("trailer", trailer);
+
+        return db.update("films", values, "WHERE id = "+id, null) > 0;
+    }
+
+    public boolean saveNew(Context context) {
+        SQLiteDatabase db = new MovieDatabaseHelper(context).getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("rating", rating);
+        values.put("title", title);
+        values.put("desc", description);
+        values.put("thumbnail", thumbnail);
+        values.put("trailer", trailer);
+
+        this.id = (int) db.insert("films", null, values);
+
+        return this.id != -1;
     }
 }
