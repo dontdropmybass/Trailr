@@ -1,9 +1,11 @@
 package ca.alexcochrane.trailr.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RatingBar;
 
+import ca.alexcochrane.trailr.NewFilmActivity;
 import ca.alexcochrane.trailr.R;
 import ca.alexcochrane.trailr.controller.FilmAdapter;
 import ca.alexcochrane.trailr.controller.MovieDatabaseHelper;
@@ -65,10 +71,16 @@ public class FilmFragment extends Fragment {
 
         SQLiteDatabase sqLiteDatabase = new MovieDatabaseHelper(view.getContext()).getReadableDatabase();
         Context context = view.getContext();
-        ListView listView = (ListView) view;
+        ListView listView = (ListView) view.findViewById(R.id.list);
         listView.setAdapter(new FilmAdapter(context,R.layout.fragment_film,
                                 MovieDatabaseHelper.loadAllFilms(sqLiteDatabase)));
-
+        Button addButton = (Button) view.findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), NewFilmActivity.class));
+            }
+        });
         return view;
     }
 

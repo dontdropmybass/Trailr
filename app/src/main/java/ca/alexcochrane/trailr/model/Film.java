@@ -86,7 +86,7 @@ public class Film {
         values.put("thumbnail", thumbnail);
         values.put("trailer", trailer);
 
-        return db.update("films", values, "WHERE id = "+id, null) > 0;
+        return db.update("films", values, "id = "+id, null) > 0;
     }
 
     public boolean saveNew(Context context) {
@@ -102,4 +102,11 @@ public class Film {
 
         return this.id != -1;
     }
+
+    public boolean delete(Context context) {
+        SQLiteDatabase db = new MovieDatabaseHelper(context).getWritableDatabase();
+        return db.delete("films","id = "+id,null) > 0;
+    }
+
+
 }
